@@ -48,7 +48,9 @@ from parser_config.nokia_sh_router_arp import nk_sh_router_arp as nk_sh_router_a
 from parser_config.nokia_sh_srv_fdb_mac import nk_sh_srv_fdb_mac as nk_sh_srv_fdb_mac
 from parser_config.nokia_sh_srv_id_arp import nk_sh_srv_id_arp as nk_sh_srv_id_arp
 from parser_config.nokia_sh_router_iface import nk_sh_router_iface as nk_sh_router_iface
-
+from parser_config.nokia_sh_port_desc import nk_sh_port_desc as nk_sh_port_desc
+from parser_config.nokia_sh_sys_lldp_negbr import nk_sh_sys_lldp_negbr as nk_sh_sys_lldp_negbr
+from parser_config.nokia_sh_sys_lldp import nk_sh_sys_lldp as nk_sh_sys_lldp
 
 from parser_config.cisco_sh_arp_vrf_all import csc_sh_arp_vrf_all as csc_sh_arp_vrf_all
 from parser_config.cisco_sh_l2vpn_fwrd_brdg_mac_loc import l2vpn_fwd_brdg_mac_loc as l2vpn_fwd_brdg_mac_loc
@@ -87,6 +89,9 @@ def nokia_process(task_label, **kwargs):
     show_service_fdb_mac = []
     show_service_id__arp = []
     show_router_interface = []
+    show_port_description = []
+    show_system_lldp_neighbor = []
+    show_system_lldp = []
 
     ##
 
@@ -110,6 +115,9 @@ def nokia_process(task_label, **kwargs):
 
             if(data == 'Collection_IP_NOKIA_ZTE_CISCO_BGP'):
                 show_router_interface.append(nk_sh_router_iface(lines,f))
+                show_port_description.append(nk_sh_port_desc(lines,f))
+                show_system_lldp_neighbor.append(nk_sh_sys_lldp_negbr(lines,f))
+                show_system_lldp.append(nk_sh_sys_lldp(lines,f))
 
 
             # df = nk_sh_router_arp
@@ -121,6 +129,10 @@ def nokia_process(task_label, **kwargs):
 
     if(data == 'Collection_IP_NOKIA_ZTE_CISCO_BGP'):
         show_router_interface_df = pd.concat(show_router_interface, ignore_index=True)
+        show_port_description_df = pd.concat(show_port_description, ignore_index=True)
+        show_system_lldp_neighbor_df = pd.concat(show_system_lldp_neighbor, ignore_index=True)
+        show_system_lldp_df = pd.concat(show_system_lldp_neighbor, ignore_index=True)
+        
 
 
 
@@ -131,7 +143,10 @@ def nokia_process(task_label, **kwargs):
         save_dataframe_files(file_dir, show_service_id__arp_df, 'nk_service_id__arp.csv')
 
     if(data == 'Collection_IP_NOKIA_ZTE_CISCO_BGP'):
-        save_dataframe_files(file_dir, show_router_interface_df, 'nk_router_interface_df.csv')
+        save_dataframe_files(file_dir, show_router_interface_df, 'nk_router_interface.csv')
+        save_dataframe_files(file_dir, show_port_description_df, 'nk_port_description.csv')
+        save_dataframe_files(file_dir, show_system_lldp_neighbor_df, 'nk_system_lldp_neighbor.csv')
+        save_dataframe_files(file_dir, show_system_lldp_df, 'nk_system_lldp.csv')
 
 
 def cisco_process(task_label, **kwargs):
@@ -272,11 +287,11 @@ def zte_process(task_label, **kwargs):
     print("Saving Result.....")
     if(data == 'Collection_IP_NOKIA_ZTE_CISCO_ARP'):
         save_dataframe_files(file_dir, show_arp_df, 'zte_arp.csv')
-        save_dataframe_files(file_dir, show_mac_l2vpn_df, 'zte_show_mac_l2vpn.csv')
+        save_dataframe_files(file_dir, show_mac_l2vpn_df, 'zte_mac_l2vpn.csv')
 
     elif(data == 'Collection_IP_NOKIA_ZTE_CISCO_BGP'):
-        save_dataframe_files(file_dir, show_interface_brief_df, 'zte_show_interface_brief.csv')
-        save_dataframe_files(file_dir, show_lldp_entry_df, 'show_lldp_entry.csv')
+        save_dataframe_files(file_dir, show_interface_brief_df, 'zte_interface_brief.csv')
+        save_dataframe_files(file_dir, show_lldp_entry_df, 'zte_lldp_entry.csv')
        
 
 def huawei_process(task_label, **kwargs):
