@@ -30,7 +30,7 @@ def nk_sh_srv_fdb_mac(papayukero,ff):
             if 'show service fdb-mac' in line:
                 parsing = True
                 parsed_lines.append(line)
-            elif (parsing and (re.search(r'\w+:[A-Za-z0-9-]*#', line))):  
+            elif (parsing and (re.search(r'^\**[A-Z]*:[A-Za-z0-9-]*\s*[A-Za-z0-9>]*\s*#\s*', line))):  
                 parsing = False
                 parsed_lines.append(line)
                 parsed_paragraph.append(parsed_lines)
@@ -54,7 +54,7 @@ def nk_sh_srv_fdb_mac(papayukero,ff):
                         continue
                     elif '---' in line and first == False:
                         header_found = False
-                    elif re.search(r'\w+:[A-Za-z0-9-]*#', line): 
+                    elif re.search(r'^\**[A-Z]*:[A-Za-z0-9-]*\s*[A-Za-z0-9>]*\s*#\s*', line): 
                         try:
                             # router = match.group().replace('#','').split(':')[1]
                             router = line.replace('#','').split(':')[1].replace('\n','').replace(' ','')

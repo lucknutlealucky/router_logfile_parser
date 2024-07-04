@@ -76,6 +76,7 @@ def zte_sh_lldp_entry(papayukero,ff):
                     
                     # Initialize a dictionary to store the parsed data
                     parsed_data = {key: '' for key in patterns}
+                    parsed_data['hostname'] = hostname
                     
                     # Extract data using regex
                     for key, pattern in patterns.items():
@@ -85,19 +86,25 @@ def zte_sh_lldp_entry(papayukero,ff):
                     
                     # Create a DataFrame
                     df = pd.DataFrame([parsed_data])
+
+                    mid = df['hostname']
+                    df.drop(labels=['hostname'], axis=1,inplace = True)
+                    df.insert(0, 'hostname', mid)
                     
                     # Display the DataFrame
                     powpow.append(df)
+
                 return pd.concat(powpow)
+                
             else:
-                return pd.DataFrame(columns=['Local_port', 'Group_MAC_address', 'Neighbor_index', 'Chassis_type',
+                return pd.DataFrame(columns=['hostname','Local_port', 'Group_MAC_address', 'Neighbor_index', 'Chassis_type',
                                                'Chassis_ID', 'Port_ID_type', 'Port_ID', 'Time_to_live',
                                                'Port_description', 'System_name', 'System_description',
                                                'System_capabilities', 'Management_address', 'Port_VLAN_ID(PVID)',
                                                'Aggregation_capability', 'Aggregation_status', 'Aggregation_port_ID'])
 
         else:
-            return pd.DataFrame(columns=['Local_port', 'Group_MAC_address', 'Neighbor_index', 'Chassis_type',
+            return pd.DataFrame(columns=['hostname','Local_port', 'Group_MAC_address', 'Neighbor_index', 'Chassis_type',
                                                'Chassis_ID', 'Port_ID_type', 'Port_ID', 'Time_to_live',
                                                'Port_description', 'System_name', 'System_description',
                                                'System_capabilities', 'Management_address', 'Port_VLAN_ID(PVID)',
